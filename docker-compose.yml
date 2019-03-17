@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  activate:
+    build: .
+    ports:
+      - target: 80
+        published: 8000
+        protocol: tcp
+        mode: host
+    networks:
+      - service
+
+  redis:
+    image: redis:4.0-alpine
+    ports:
+      - target: 6379
+        published: 6379
+        protocol: tcp
+        mode: host
+    networks:
+      - service
+
+networks:
+  service:

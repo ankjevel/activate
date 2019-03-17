@@ -1,0 +1,26 @@
+server {
+  listen 80;
+  listen [::]:80;
+  server_name localhost;
+  resolver 127.0.0.11 8.8.8.8;
+
+  location ~* "^/test/([a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12})$" {
+    set $lua_uuid "$1";
+    set $lua_status "";
+
+    default_type "application/json; charset=utf-8";
+    content_by_lua_file /usr/local/openresty/nginx/conf/lua/validate.lua;
+  }
+
+  location ~* "^/test/([a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12})/([0-1])$" {
+    set $lua_uuid "$1";
+    set $lua_status "$2";
+
+    default_type "application/json; charset=utf-8";
+    content_by_lua_file /usr/local/openresty/nginx/conf/lua/validate.lua;
+  }
+
+  location / {
+    include actions/confirm_allow;
+  }
+}
