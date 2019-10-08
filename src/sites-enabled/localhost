@@ -3,6 +3,14 @@ server {
   listen [::]:80;
   server_name localhost;
   resolver 127.0.0.11 8.8.8.8;
+  set $blacklits "0";
+  set $allowed_country "1";
+  set $localnet "0";
+
+  location /hello {
+    set $localnet "1";
+    try_files $uri index.html;
+  }
 
   location ~* "^/test/([a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12})$" {
     set $lua_uuid "$1";
